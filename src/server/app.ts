@@ -5,6 +5,7 @@ import helmet from "helmet";
 import os from 'os';
 import ErrorHandler from "../helpers/error-handler";
 
+dotenv.config();
 
 class App {
     private readonly app: Application;
@@ -29,7 +30,6 @@ class App {
         this.app.use(helmet());
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended: true}));
-        dotenv.config();
     }
 
     private initRoutes(){

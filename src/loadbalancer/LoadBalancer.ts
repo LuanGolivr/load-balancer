@@ -14,7 +14,7 @@ export class LoadBalancer {
         const server = this.strategy.selectServer(req);
 
         if(server){
-            const targetUrl = `${server.url}${req.originalUrl}`;
+            const targetUrl = `${server.url}/api/v1${req.originalUrl}`;
             console.log(`Forwarding request to: ${targetUrl}`);
 
             try {
@@ -50,7 +50,7 @@ export class LoadBalancer {
                     }
                 });
             } catch (error: any) {
-                console.error(`Error forwarding request to ${targetUrl}:`, error.message);
+                console.error(`Error forwarding request to ${targetUrl} `, error.message);
                 if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT' || error.code === 'ENOTFOUND') {
                     this.strategy.setServerUnhealthy(server.id);
                 }

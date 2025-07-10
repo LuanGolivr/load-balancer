@@ -4,6 +4,8 @@ import { LoadBalancer } from "./LoadBalancer";
 import { ILoadBalancingStrategy } from "../interfaces/lb-stratgy.interface";
 import { RoundRobinStrategy } from "./strategies/RoundRobinStrategy";
 
+dotenv.config();
+
 class LoadBalancerApp{
     private readonly app: Application;
     private readonly port: number;
@@ -30,11 +32,10 @@ class LoadBalancerApp{
     private initMiddlewares(){
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended: true}));
-        dotenv.config();
     }
 
     private initRoutes(){
-        this.app.use("*", (req: Request, res: Response) => {
+        this.app.use("/", (req: Request, res: Response) => {
             this.loadBalancer.distribute(req, res);
         });
     }
@@ -47,7 +48,12 @@ class LoadBalancerApp{
 }
 
 
-const serverUrls: string[] = [];
+const serverUrls: string[] = [
+    'http://backend1:3000',
+    'http://backend2:3000',
+    'http://backend3:3000',
+];
+
 const loadBalancerApp = new LoadBalancerApp(serverUrls);
 loadBalancerApp.listen();
 
