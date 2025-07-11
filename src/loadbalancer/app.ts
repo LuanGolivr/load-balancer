@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 import { LoadBalancer } from "./LoadBalancer";
 import { ILoadBalancingStrategy } from "../interfaces/lb-stratgy.interface";
 import { RoundRobinStrategy } from "./strategies/RoundRobinStrategy";
+import { IPHashStrategy } from "./strategies/IPHashStrategy";
+import { LeastConnectionStrategy } from "./strategies/LeastConnectionStrategy";
+import { LeastResponseTimeStrategy } from "./strategies/LeastResponseTimeStrategy";
+import { ResourceBasedStrategy } from "./strategies/ResourceBasedStrategy";
 
 dotenv.config();
 
@@ -18,9 +22,43 @@ class LoadBalancerApp{
         this.app = express();
         this.port = parseInt(process.env.LB_PORT || "8080");
         this.serverUrls = serverUrls;
-        this.loadBalancerStratergy = new RoundRobinStrategy(this.serverUrls);
-        this.loadBalancer = new LoadBalancer(this.loadBalancerStratergy);
+        this.loadBalancerStratergy = this.choseStrategy(0);
+        this.loadBalancer = new LoadBalancer(this.loadBalancerStratergy, serverUrls);
         this.init();
+    }
+
+    private choseStrategy(strategyCode: number): ILoadBalancingStrategy{
+        let strategy: ILoadBalancingStrategy;
+        switch (strategyCode) {
+            case 1:
+                strategy = new RoundRobinStrategy();
+                break;
+            
+            case 2:
+                strategy = new RoundRobinStrategy();
+                break;
+
+            case 3:
+                strategy = new IPHashStrategy();
+                break;
+
+            case 4:
+                strategy = new LeastConnectionStrategy();
+                break;
+
+            case 5:
+                strategy = new LeastResponseTimeStrategy();
+                break;
+            
+            case 6:
+                strategy = new ResourceBasedStrategy();
+                break;
+        
+            default:
+                strategy = new RoundRobinStrategy();
+                break;
+        }
+        return strategy;
     }
 
     private init(){
