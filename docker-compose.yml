@@ -1,0 +1,72 @@
+services:
+  backend1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000
+      - INSTANCE_ID=backend-instance-1
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+  backend2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000
+      - INSTANCE_ID=backend-instance-2
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+  backend3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000
+      - INSTANCE_ID=backend-instance-3
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+  
+  loadbalancer:
+    build: 
+      context: .
+      dockerfile: Dockerfile.loadbalancer
+    
+    environment:
+      - LB_PORT=8080
+      - STRATEGY_CHOICE=1
+      - WEIGHTS=
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      backend1:
+        condition: service_healthy
+      backend2:
+        condition: service_healthy
+      backend3:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD","curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
