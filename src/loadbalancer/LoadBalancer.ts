@@ -102,7 +102,6 @@ export class LoadBalancer {
         }else{
             res.status(503).send('Service Unavailable: No healthy backend servers.');
         }
-        
     }
 
     async forwardRequestToServer(req: Request, res: Response,  server: Server, startTime: bigint){

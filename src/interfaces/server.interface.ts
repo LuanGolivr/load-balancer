@@ -9,8 +9,6 @@ export interface Server {
     requestCount: number;
     currentLoad: number;
     weight: number;
-
-
     queue:  {req: Request; res: Response; startTime: bigint}[];
     isProcessingQueue: boolean;
 };
