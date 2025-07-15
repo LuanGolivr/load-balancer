@@ -110,6 +110,8 @@ export class LoadBalancer {
         console.log(`Forwarding request to: ${targetUrl}`);
 
         try {
+            req.headers["cache-control"] = "no-cache";
+
             const axiosConfig = {
                 method: req.method,
                 url: targetUrl,

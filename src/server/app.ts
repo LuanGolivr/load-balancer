@@ -34,6 +34,7 @@ class App {
 
     private initRoutes(){
         this.app.use("/api/v1/", (req: Request, res: Response)=>{
+            req.headers["cache-control"] = "no-cache";
             res.status(200).json({message: `server instance ${this.INSTANCE_ID} listening on port ${this.port}`});
         });
     }

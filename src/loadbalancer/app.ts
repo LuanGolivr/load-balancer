@@ -65,7 +65,6 @@ class LoadBalancerApp{
     private init(){
         this.initMiddlewares();
         this.initRoutes();
-
     };
 
     private initMiddlewares(){
