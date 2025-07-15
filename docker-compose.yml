@@ -69,4 +69,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  
+  k6_direct:
+    image: grafana/k6:latest
+    volumes:
+      - ./k6_script_singleNode.js:/k6_script.js
+    restart: "no"
+  
+  k6_lb:
+    image: grafana/k6:latest
+    volumes:
+      - ./k6_script_lb.js:/k6_script.js
+    restart: "no"
       
