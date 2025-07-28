@@ -1,15 +1,16 @@
+
 services:
   backend1:
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      - PORT=3000
+      - PORT=${PORT}
       - INSTANCE_ID=backend-instance-1
     expose:
-      - "3000"
+      - "${PORT}"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1"]
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}/api/v1"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -19,12 +20,12 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - PORT=3000
+      - PORT=${PORT}
       - INSTANCE_ID=backend-instance-2
     expose:
-      - "3000"
+      - "${PORT}"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1"]
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}/api/v1"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -34,12 +35,12 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - PORT=3000
+      - PORT=${PORT}
       - INSTANCE_ID=backend-instance-3
     expose:
-      - "3000"
+      - "${PORT}"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1"]
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}/api/v1"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -51,12 +52,13 @@ services:
       dockerfile: Dockerfile.loadbalancer
     
     environment:
-      - LB_PORT=8080
-      - STRATEGY_CHOICE=1
+      - LB_PORT=${LB_PORT}
+      - STRATEGY_CHOICE=${STRATEGY_CHOICE}
+      - PORT=${PORT}
       - WEIGHTS=
     restart: always
     ports:
-      - "8080:8080"
+      - "${LB_PORT}:${LB_PORT}"
     depends_on:
       backend1:
         condition: service_healthy
@@ -65,7 +67,7 @@ services:
       backend3:
         condition: service_healthy
     healthcheck:
-      test: ["CMD","curl", "-f", "http://localhost:8080"]
+      test: ["CMD","curl", "-f", "http://localhost:${LB_PORT}"]
       interval: 10s
       timeout: 5s
       retries: 5

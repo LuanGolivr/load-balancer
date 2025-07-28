@@ -9,7 +9,9 @@ import { LeastResponseTimeStrategy } from "./strategies/LeastResponseTimeStrateg
 import { ResourceBasedStrategy } from "./strategies/ResourceBasedStrategy";
 import { WeightedRoundRobinStrategy } from "./strategies/WeigthedRoundRobinStrategy";
 
-dotenv.config();
+dotenv.config({
+    path: '../../.env'
+});
 
 class LoadBalancerApp{
     private readonly app: Application;
@@ -88,17 +90,15 @@ class LoadBalancerApp{
 
 
 const serverUrls: string[] = [
-    'http://backend1:3000',
-    'http://backend2:3000',
-    'http://backend3:3000',
+    `http://backend1:${process.env.PORT || 3000}`,
+    `http://backend2:${process.env.PORT || 3000}`,
+    `http://backend3:${process.env.PORT || 3000}`,
 ];
 
-const args = process.argv.slice(2);
-const strategyChoice = parseInt(process.env.STRATEGY_CHOICE || "1"); 
+
+const strategyChoice = process.env.STRATEGY_CHOICE ? parseInt(process.env.STRATEGY_CHOICE) : 1;
 const weightsString = process.env.WEIGHTS;
 let weights: number[] | undefined;
-
-console.log("DEBUG args 0: ", strategyChoice);
 
 if(weightsString){
     weights = weightsString.split(',').map(weight => parseInt(weight.trim())).filter(weight => !isNaN(weight));
@@ -109,6 +109,6 @@ if(weightsString){
 }
 
 
-const loadBalancerApp = new LoadBalancerApp(serverUrls, 4, weights);
+const loadBalancerApp = new LoadBalancerApp(serverUrls, strategyChoice, weights);
 loadBalancerApp.listen();
 

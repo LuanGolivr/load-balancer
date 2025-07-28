@@ -5,7 +5,9 @@ import helmet from "helmet";
 import os from 'os';
 import ErrorHandler from "../helpers/error-handler";
 
-dotenv.config();
+dotenv.config({
+    path: '../../.env'
+});
 
 class App {
     private readonly app: Application;
