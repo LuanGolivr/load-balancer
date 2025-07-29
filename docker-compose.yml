@@ -55,7 +55,7 @@ services:
       - LB_PORT=${LB_PORT}
       - STRATEGY_CHOICE=${STRATEGY_CHOICE}
       - PORT=${PORT}
-      - WEIGHTS=
+      - WEIGHTS=${WEIGHTS}
     restart: always
     ports:
       - "${LB_PORT}:${LB_PORT}"
